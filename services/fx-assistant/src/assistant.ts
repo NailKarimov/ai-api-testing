@@ -107,7 +107,7 @@ export type AssistantOptions = {
 
 export function buildAssistant(opts: AssistantOptions) {
   const client = new Anthropic({
-    apiKey: opts.apiKey,
+    apiKey: opts.apiKey.trim(), // a pasted key often carries a trailing space or newline
     baseURL: opts.baseURL,
     timeout: opts.timeoutMs ?? 30_000,
     maxRetries: opts.maxRetries ?? 2,

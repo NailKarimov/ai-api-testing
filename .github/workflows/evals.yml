@@ -41,6 +41,25 @@ jobs:
             echo "present=true" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Check that the API accepts the key (free request)
+        if: steps.key.outputs.present == 'true'
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          KEY="$(printf '%s' "$ANTHROPIC_API_KEY" | tr -d '[:space:]')"
+          if [ "$KEY" != "$ANTHROPIC_API_KEY" ]; then
+            echo "::warning::The ANTHROPIC_API_KEY secret contains spaces or line breaks; they are removed before use."
+          fi
+          case "$KEY" in sk-ant-*) ;; *) echo "::error::The secret does not look like an Anthropic API key (it should start with sk-ant-)."; exit 1 ;; esac
+          CODE=$(curl -s -o /tmp/models.json -w '%{http_code}' https://api.anthropic.com/v1/models \
+            -H "x-api-key: $KEY" -H "anthropic-version: 2023-06-01")
+          case "$CODE" in
+            200) echo "The API accepts the key." ;;
+            401) echo "::error::The API rejected the key (401). Create a new key in Claude Console → API Keys and save it again as the ANTHROPIC_API_KEY secret."; exit 1 ;;
+            403) echo "::error::The key has no permission (403). Check that the key's workspace is active."; exit 1 ;;
+            *) echo "::error::Unexpected answer $CODE from the API:"; head -c 300 /tmp/models.json; exit 1 ;;
+          esac
+
       - name: Run the evals
         id: evals
         if: steps.key.outputs.present == 'true'

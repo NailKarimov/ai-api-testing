@@ -7,7 +7,7 @@ import { CASES } from '../../evals/cases';
  * Evals against the real Claude API. Skipped without ANTHROPIC_API_KEY (a repository secret in CI, never in the
  * code). Each attempt is written to eval-results/ for scripts/eval-summary.mjs: pass rates, latency, tokens, cost.
  */
-const key = process.env.ANTHROPIC_API_KEY ?? '';
+const key = (process.env.ANTHROPIC_API_KEY ?? '').trim();
 test.skip(!key, 'ANTHROPIC_API_KEY is not set: evals run only in evals.yml');
 
 for (const c of CASES) {
