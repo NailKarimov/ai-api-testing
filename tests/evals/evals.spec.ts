@@ -61,7 +61,11 @@ for (const c of CASES) {
     expect(
       passed,
       attempts
-        .map((a, i) => `#${i + 1}: ${a.pass ? 'pass' : a.reasons.join('; ')} ${a.error ?? ''}`)
+        .map(
+          (a, i) =>
+            `#${i + 1}: ${a.pass ? 'pass' : a.reasons.join('; ')} ${a.error ?? ''}` +
+            (a.pass || !a.result ? '' : `\n    answer: ${JSON.stringify(a.result.answer.slice(0, 300))}`),
+        )
         .join('\n'),
     ).toBeGreaterThanOrEqual(c.minPass);
   });
