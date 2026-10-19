@@ -21,6 +21,8 @@ export default defineConfig<{ transport: TransportKind }>({
     { name: 'inspector', testDir: './tests/inspector' },
     // The LLM endpoint around a fake Messages API: deterministic, free (docs/llm.md).
     { name: 'llm', testDir: './tests/llm' },
+    // Tests of the eval oracle itself (what counts as a leak).
+    { name: 'unit', testDir: './tests/unit' },
     // Evals against the real Claude API: only when ANTHROPIC_API_KEY is set (evals.yml).
     { name: 'evals', testDir: './tests/evals', timeout: 180_000, retries: 0 },
   ],
