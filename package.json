@@ -1,0 +1,49 @@
+{
+  "name": "ai-api-testing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Testing AI-facing APIs: an MCP server of our own (tools, resources, prompts over stdio and Streamable HTTP) and an LLM endpoint (non-deterministic answers, evals, latency). TypeScript + Playwright Test + Allure, GitHub Actions.",
+  "license": "MIT",
+  "scripts": {
+    "test": "playwright test",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:mcp": "playwright test --project=mcp-stdio --project=mcp-http --project=mcp-http-protocol --project=inspector",
+    "mcp:stdio": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON services/fx-mcp/src/stdio.mts",
+    "mcp:http": "node --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON services/fx-mcp/src/http.mts",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit",
+    "allure:generate": "node scripts/allure-prepare.mjs && allure generate allure-results -o allure-report --clean",
+    "allure:open": "allure open allure-report",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,mjs,js}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": "prettier --write"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@modelcontextprotocol/inspector": "^2.11.0",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "@playwright/test": "^1.64.1",
+    "@types/node": "^26.6.5",
+    "allure-commandline": "^2.46.1",
+    "allure-js-commons": "^3.14.0",
+    "allure-playwright": "^3.14.0",
+    "dotenv": "^18.0.8",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-playwright": "^2.12.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.9.10",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.2",
+    "zod": "^4.6.7"
+  }
+}
