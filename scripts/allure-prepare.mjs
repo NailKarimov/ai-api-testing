@@ -15,6 +15,7 @@ const lines = {
   Commit: (env.GITHUB_SHA ?? 'local').slice(0, 7),
   'MCP server': 'fx-mcp on @modelcontextprotocol/sdk 1.x (spec 2025-11-25), stdio + Streamable HTTP',
   'MCP Inspector': '@modelcontextprotocol/inspector 2.x',
+  'LLM endpoint': 'fx-assistant on claude-haiku-5-5; plumbing tests use a fake Messages API',
 };
 writeFileSync(
   `${dir}/environment.properties`,

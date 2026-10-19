@@ -3,7 +3,7 @@
 [![Tests](https://github.com/NailKarimov/ai-api-testing/actions/workflows/tests.yml/badge.svg)](https://github.com/NailKarimov/ai-api-testing/actions/workflows/tests.yml)
 [![Allure report](https://img.shields.io/badge/report-Allure-orange)](https://nailkarimov.github.io/ai-api-testing/)
 
-Testing the APIs that AI assistants use: an **MCP server** of our own, and next an **LLM endpoint**.
+Testing the APIs that AI assistants use: an **MCP server** of our own and an **LLM endpoint** built on Claude.
 
 - **System under test:** `services/fx-mcp`, a Model Context Protocol server that converts money at a fixed
   reference table: four tools (one with progress and cancellation, one that changes the server), three resources, a
@@ -29,7 +29,21 @@ schema rightly refuses. **Do the tests catch bugs?** 14 bugs planted: 13 caught,
 an operational resource that makes abandoned work visible. Details: [`docs/mcp.md`](docs/mcp.md) · visual guide:
 [`docs/mcp.html`](https://nailkarimov.github.io/ai-api-testing/mcp.html).
 
-**Next:** an LLM endpoint: non-deterministic answers, evals with pass-rate thresholds, latency, prompt injection.
+## LLM endpoint (20 plumbing tests + 13 evals)
+
+`services/fx-assistant`: `POST /v1/answer` takes a customer's question in any language; **Claude Haiku 5.5** answers
+with structured JSON output, calling the `convert` tool for every number. The service then checks the model's work:
+the answer must match the schema, and every amount must come from a tool call (**groundedness**), or it says so.
+
+| Layer                       | What it proves                                                                                                                                                                                                                                                                                                                                                                                    | When it runs                                                          |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `llm/plumbing` (20)         | against a **fake Messages API** (the real SDK, a local stub): the exact request (pinned model, strict tool, JSON schema, system prompt), the tool loop with ids, tool errors fed back to the model, hallucinated amounts flagged, broken / truncated output → 502, refusal, endless tool calls stopped, 529 retried then 503 + Retry-After, timeout → 504, the key never echoed, input boundaries | every push, free                                                      |
+| `evals` (13 cases × 3 runs) | against the **real model**: exact conversions in English and Russian, two at once, casual wording; asking for a missing currency; no invented rates (Bitcoin, 1999); refusing off-topic requests; **prompt injection** must never leak the system prompt (a canary string), 3 runs out of 3                                                                                                       | `evals.yml`: by hand and weekly, needs the `ANTHROPIC_API_KEY` secret |
+
+A model answers differently each time, so each eval runs 3 times and needs a pass count (3/3 for safety, ≥ 2/3 for
+some quality cases). `scripts/eval-summary.mjs` reports pass rates per category, latency p50/p95 and tokens with an
+estimated cost, and fails the run over budget ($0.25 or p95 > 20 s). 10 bugs planted in the plumbing: all caught.
+Details: [`docs/llm.md`](docs/llm.md) · visual guide: [`docs/llm.html`](https://nailkarimov.github.io/ai-api-testing/llm.html).
 
 ## Running it
 
@@ -37,6 +51,8 @@ an operational resource that makes abandoned work visible. Details: [`docs/mcp.m
 npm ci
 npm test                 # everything
 npm run test:mcp         # MCP: stdio, HTTP, raw protocol, Inspector
+npm run test:llm         # LLM endpoint against the fake Messages API
+npm run evals            # real Claude: needs ANTHROPIC_API_KEY in .env (see .env.example)
 npm run mcp:http         # by hand: http://127.0.0.1:3333/mcp, tokens dev-read and dev-admin
 npx mcp-inspector --cli http://127.0.0.1:3333/mcp --header "Authorization: Bearer dev-read" --method tools/list
 ```
@@ -50,5 +66,6 @@ REST and GraphQL: [api-test-automation](https://github.com/NailKarimov/api-test-
 [api-protocols-testing](https://github.com/NailKarimov/api-protocols-testing) · overview:
 [github.com/NailKarimov](https://github.com/NailKarimov).
 
-**Stack:** TypeScript · Model Context Protocol (`@modelcontextprotocol/sdk`, MCP Inspector) · JSON-RPC 2.0 · zod ·
+**Stack:** TypeScript · Model Context Protocol (`@modelcontextprotocol/sdk`, MCP Inspector) · JSON-RPC 2.0 · Claude API
+(`@anthropic-ai/sdk`, structured outputs, tool use) · zod ·
 Playwright Test · Allure · GitHub Actions.

@@ -16,6 +16,7 @@
     "config/**/*.ts",
     "playwright.config.ts",
     "services/**/*.ts",
-    "services/**/*.mts"
+    "services/**/*.mts",
+    "evals/**/*.ts"
   ]
 }

@@ -1,0 +1,68 @@
+name: Evals
+
+# Runs the fx-assistant evals against the real Claude API. Costs money (cents per run), so it runs on demand and
+# once a week, not on every push. Needs the repository secret ANTHROPIC_API_KEY.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * 1' # Mondays, 04:00 UTC
+
+permissions:
+  contents: read
+
+concurrency:
+  group: evals
+  cancel-in-progress: false
+
+jobs:
+  evals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Check the API key
+        id: key
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::notice::ANTHROPIC_API_KEY is not set (Settings → Secrets and variables → Actions); evals skipped."
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Run the evals
+        id: evals
+        if: steps.key.outputs.present == 'true'
+        continue-on-error: true
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: npx playwright test --project=evals
+
+      - name: Summary, latency and cost budget
+        if: steps.key.outputs.present == 'true'
+        run: node scripts/eval-summary.mjs
+
+      - name: Upload eval results
+        if: always() && steps.key.outputs.present == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: eval-results
+          path: |
+            eval-results
+            playwright-report
+          retention-days: 30
+
+      - name: Fail the job if an eval failed
+        if: steps.evals.outcome == 'failure'
+        run: exit 1

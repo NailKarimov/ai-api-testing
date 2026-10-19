@@ -17,7 +17,10 @@
     "typecheck": "tsc --noEmit",
     "allure:generate": "node scripts/allure-prepare.mjs && allure generate allure-results -o allure-report --clean",
     "allure:open": "allure open allure-report",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:llm": "playwright test --project=llm",
+    "evals": "playwright test --project=evals && node scripts/eval-summary.mjs",
+    "llm:dev": "node --env-file-if-exists=.env --experimental-strip-types --disable-warning=MODULE_TYPELESS_PACKAGE_JSON services/fx-assistant/src/server.mts"
   },
   "lint-staged": {
     "*.{ts,mjs,js}": [
@@ -27,6 +30,7 @@
     "*.{json,md,yml,yaml}": "prettier --write"
   },
   "devDependencies": {
+    "@anthropic-ai/sdk": "^0.135.0",
     "@eslint/js": "^10.0.1",
     "@modelcontextprotocol/inspector": "^2.11.0",
     "@modelcontextprotocol/sdk": "^1.32.1",

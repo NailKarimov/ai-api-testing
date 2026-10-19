@@ -19,5 +19,9 @@ export default defineConfig<{ transport: TransportKind }>({
     { name: 'mcp-http-protocol', testDir: './tests/mcp-http' },
     // MCP Inspector CLI as an independent client (SDK v2 against our v1 server).
     { name: 'inspector', testDir: './tests/inspector' },
+    // The LLM endpoint around a fake Messages API: deterministic, free (docs/llm.md).
+    { name: 'llm', testDir: './tests/llm' },
+    // Evals against the real Claude API: only when ANTHROPIC_API_KEY is set (evals.yml).
+    { name: 'evals', testDir: './tests/evals', timeout: 180_000, retries: 0 },
   ],
 });

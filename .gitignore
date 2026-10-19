@@ -9,3 +9,4 @@ allure-report/
 .DS_Store
 Thumbs.db
 .claude/
+eval-results/
