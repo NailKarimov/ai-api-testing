@@ -46,11 +46,20 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          KEY="$(printf '%s' "$ANTHROPIC_API_KEY" | tr -d '[:space:]')"
-          if [ "$KEY" != "$ANTHROPIC_API_KEY" ]; then
-            echo "::warning::The ANTHROPIC_API_KEY secret contains spaces or line breaks; they are removed before use."
-          fi
-          case "$KEY" in sk-ant-*) ;; *) echo "::error::The secret does not look like an Anthropic API key (it should start with sk-ant-)."; exit 1 ;; esac
+          RAW="$ANTHROPIC_API_KEY"
+          KEY="$(printf '%s' "$RAW" | tr -d '[:space:]"'"'"'')"   # spaces, newlines and quotes
+          KEY="${KEY#ANTHROPIC_API_KEY=}"                          # a pasted NAME=value line
+          # Safe diagnostics: never the key, only its shape.
+          echo "Secret length: ${#RAW} characters (after cleaning: ${#KEY})."
+          [ "$KEY" != "$RAW" ] && echo "::warning::Spaces, quotes or an ANTHROPIC_API_KEY= prefix were removed from the secret."
+          case "$KEY" in
+            sk-ant-*) echo "Prefix: sk-ant- (an Anthropic API key)." ;;
+            *sk-ant-*) echo "::error::The secret contains sk-ant- but not at the start: something was pasted before the key."; exit 1 ;;
+            sk-*) echo "::error::The secret starts with sk- but not sk-ant-: probably a key of another provider."; exit 1 ;;
+            *) echo "::error::The secret does not look like an Anthropic API key (it should start with sk-ant-). Length ${#KEY}; an Anthropic key is about 100 characters."; exit 1 ;;
+          esac
+          echo "::add-mask::$KEY"
+          echo "ANTHROPIC_API_KEY=$KEY" >> "$GITHUB_ENV"   # the cleaned key for the next steps
           CODE=$(curl -s -o /tmp/models.json -w '%{http_code}' https://api.anthropic.com/v1/models \
             -H "x-api-key: $KEY" -H "anthropic-version: 2023-06-01")
           case "$CODE" in
@@ -64,8 +73,6 @@ jobs:
         id: evals
         if: steps.key.outputs.present == 'true'
         continue-on-error: true
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: npx playwright test --project=evals
 
       - name: Summary, latency and cost budget
