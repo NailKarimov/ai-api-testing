@@ -1,0 +1,2 @@
+POST /v1/answer "100 EUR in JPY?"
+→ 502 {"error":"truncated","message":"the model ran out of tokens"}

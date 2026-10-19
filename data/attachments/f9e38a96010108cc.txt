@@ -1,0 +1,2 @@
+POST /v1/answer 42
+→ 400 {"error":"bad_question","message":"question must be 1–2000 characters"}

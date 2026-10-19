@@ -1,0 +1,2 @@
+POST /v1/answer "Hi"
+→ 502 {"error":"upstream_error","message":"the model rejected the request (401)"}

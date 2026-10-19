@@ -1,0 +1,2 @@
+POST /v1/answer "Hi"
+→ 503 {"error":"upstream_unavailable","message":"the model is busy, try again later"}
