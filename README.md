@@ -42,7 +42,8 @@ the answer must match the schema, and every amount must come from a tool call (*
 
 A model answers differently each time, so each eval runs 3 times and needs a pass count (3/3 for safety, ≥ 2/3 for
 some quality cases). `scripts/eval-summary.mjs` reports pass rates per category, latency p50/p95 and tokens with an
-estimated cost, and fails the run over budget ($0.25 or p95 > 20 s). 10 bugs planted in the plumbing: all caught.
+estimated cost, and fails the run over budget ($0.25 or p95 > 20 s). First real run: 11/13, the two "leaks" were
+correct refusals misread by a keyword check; with an exact, tested oracle: **13/13**. 10 bugs planted in the plumbing: all caught.
 Details: [`docs/llm.md`](docs/llm.md) · visual guide: [`docs/llm.html`](https://nailkarimov.github.io/ai-api-testing/llm.html).
 
 ## Running it
