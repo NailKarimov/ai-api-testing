@@ -1,0 +1,5 @@
+    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
+    7 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
+    7 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
+    9 ms → {"method":"tools/call","params":{"name":"convert","arguments":{"amount":"9999999999","from":"JPY","to":"GBP"}},"jsonrpc":"2.0","id":1}
+   11 ms ← {"jsonrpc":"2.0","id":1,"result":{"content":[{"type":"text","text":"9999999999 JPY = 52057299.60 GBP (rate 0.005206)"}],"structuredContent":{"amount":"9999999999","from":"JPY","to":"GBP","rate":"0.005206","result":"52057299.60"}}}
