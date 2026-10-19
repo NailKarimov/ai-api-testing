@@ -1,2 +1,0 @@
-POST /v1/answer "1 EUR in USD?"
-→ 200 {"answer":"ok","conversions":[{"amount":"1","from":"EUR","to":"USD","result":"1.09"}],"refused":false,"needs_clarification":false,"grounded":false,"tool_calls":[],"usage":{"input_tokens":120,"output_tokens":40},"model":"claude-haiku-5-5","turns":1,"latency_ms":5}
