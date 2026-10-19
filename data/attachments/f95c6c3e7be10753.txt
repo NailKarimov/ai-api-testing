@@ -1,0 +1,5 @@
+    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
+    4 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
+    4 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
+    6 ms → {"method":"tools/call","params":{"name":"convert","arguments":{"amount":"1","from":"EUR","to":"XYZ"}},"jsonrpc":"2.0","id":1}
+   11 ms ← {"jsonrpc":"2.0","id":1,"result":{"content":[{"type":"text","text":"Unknown currency: XYZ. Known: CHF, EUR, GBP, JPY, SEK, USD."}],"isError":true}}

@@ -1,0 +1,9 @@
+{
+  "contents": [
+    {
+      "uri": "fx://currencies",
+      "mimeType": "application/json",
+      "text": "[{\"code\":\"CHF\",\"minorUnits\":2},{\"code\":\"EUR\",\"minorUnits\":2},{\"code\":\"GBP\",\"minorUnits\":2},{\"code\":\"JPY\",\"minorUnits\":0},{\"code\":\"SEK\",\"minorUnits\":2},{\"code\":\"USD\",\"minorUnits\":2}]"
+    }
+  ]
+}

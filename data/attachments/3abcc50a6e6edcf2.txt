@@ -1,0 +1,149 @@
+{
+  "tools": [
+    {
+      "name": "convert",
+      "title": "Convert an amount",
+      "description": "Converts an amount from one currency to another at the reference rate.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "string",
+            "pattern": "^(?:0|[1-9]\\d{0,9})(?:\\.\\d{1,2})?$",
+            "description": "Decimal string with at most 2 places, e.g. \"100.50\""
+          },
+          "from": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "description": "ISO 4217 code, e.g. \"EUR\""
+          },
+          "to": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "description": "ISO 4217 code, e.g. \"JPY\""
+          }
+        },
+        "required": [
+          "amount",
+          "from",
+          "to"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "rate": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount",
+          "from",
+          "to",
+          "rate",
+          "result"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "additionalProperties": false
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "list_rates",
+      "title": "List rates",
+      "description": "Lists the rate of every known currency against a base currency.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "base": {
+            "default": "EUR",
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "slow_report",
+      "title": "Slow report",
+      "description": "Builds a month-end report in steps, reporting progress; can be cancelled.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "steps": {
+            "default": 5,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 20
+          },
+          "stepMs": {
+            "default": 100,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2000
+          }
+        },
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    },
+    {
+      "name": "enable_currency",
+      "title": "Enable a currency",
+      "description": "Switches on a dormant currency. Changes what the server offers.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$"
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true
+      },
+      "execution": {
+        "taskSupport": "forbidden"
+      }
+    }
+  ]
+}
