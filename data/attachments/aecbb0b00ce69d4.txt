@@ -1,5 +1,0 @@
-    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
-  239 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
-  240 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
-  240 ms → {"method":"resources/read","params":{"uri":"file:///etc/passwd"},"jsonrpc":"2.0","id":1}
-  244 ms ← {"jsonrpc":"2.0","id":1,"error":{"code":-32602,"message":"MCP error -32602: Resource file:///etc/passwd not found"}}
