@@ -1,72 +1,90 @@
 # ai-api-testing
 
 [![Tests](https://github.com/NailKarimov/ai-api-testing/actions/workflows/tests.yml/badge.svg)](https://github.com/NailKarimov/ai-api-testing/actions/workflows/tests.yml)
+[![Evals](https://github.com/NailKarimov/ai-api-testing/actions/workflows/evals.yml/badge.svg)](https://github.com/NailKarimov/ai-api-testing/actions/workflows/evals.yml)
 [![Allure report](https://img.shields.io/badge/report-Allure-orange)](https://nailkarimov.github.io/ai-api-testing/)
 
-Testing the APIs that AI assistants use: an **MCP server** of our own and an **LLM endpoint** built on Claude.
+Testing the APIs that AI assistants use: an **MCP server** of our own and an **LLM endpoint** built on Claude. The
+tests check what the model sees, what it is allowed to do, and whether its answers can be trusted.
 
-- **System under test:** `services/fx-mcp`, a Model Context Protocol server that converts money at a fixed
-  reference table: four tools (one with progress and cancellation, one that changes the server), three resources, a
-  prompt, argument completion. Served over **stdio** and **Streamable HTTP** (sessions, bearer tokens with scopes,
-  OAuth Protected Resource Metadata, Origin checks).
-- **One suite, two transports:** the same 42 tests run over stdio (the server as a child process) and over HTTP.
-- **The wire as the oracle:** every JSON-RPC message is recorded; tests assert on it where the SDK would hide
-  something, and the transcripts go to the Allure report with tokens masked.
+|                        |                                                                                                                                                                                                   |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **System under test**  | own MCP server `fx-mcp` (tools, resources, prompts; stdio and Streamable HTTP with scopes) and own LLM endpoint `fx-assistant` (Claude Haiku 5.5 with tool use and structured output)             |
+| **Language and tools** | TypeScript · Playwright Test · `@modelcontextprotocol/sdk` · MCP Inspector · `@anthropic-ai/sdk` · zod · Allure                                                                                   |
+| **Types of testing**   | functional API (JSON-RPC), protocol conformance, security (scopes, Origin, path traversal, tool poisoning, prompt injection), LLM evals (correctness, groundedness)                               |
+| **Tests**              | 126 on every push (100 MCP, 20 LLM plumbing, 6 unit) + 13 evals × 3 runs against the real model                                                                                                   |
+| **Test quality**       | 23 of 24 planted bugs caught; the 24th is an equivalent mutant (13 of 14 in MCP, 10 of 10 in the LLM plumbing)                                                                                    |
+| **Reports**            | [Allure](https://nailkarimov.github.io/ai-api-testing/) · [MCP guide](https://nailkarimov.github.io/ai-api-testing/mcp.html) · [LLM guide](https://nailkarimov.github.io/ai-api-testing/llm.html) |
 
-## MCP (100 tests)
+## What is tested
 
-| Spec                        | What it proves                                                                                                                                                                                                                                                                                                                                 |
-| --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `mcp/handshake-and-tools`   | protocol version and capabilities; tool schemas and annotations; **tool metadata safe to show a model** (no hidden characters or injected instructions); exact conversions from an independent oracle; business errors as `isError` results a model can act on; progress before the result; cancellation really stops the work; `list_changed` |
-| `mcp/resources-and-prompts` | resources, templates, completion; resources and tools agree; bad URIs (`..`, `file:///etc/passwd`) refused; prompts; the admin tool trusted over stdio, scope-checked over HTTP                                                                                                                                                                |
-| `mcp-http/protocol`         | sessions (400 / 404 / DELETE), 401 with RFC 9728 metadata, `Origin` → 403, JSON-RPC errors, protocol-version header, `Accept` → 406, read-only token                                                                                                                                                                                           |
-| `inspector/inspector-cli`   | MCP Inspector 2.x (SDK v2, spec 2026-07-28) against our SDK v1 server: a compatibility check                                                                                                                                                                                                                                                   |
+| Suite                       | Tool                    | What it proves                                                                                                                                                                                                                  |
+| --------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mcp/handshake-and-tools`   | MCP SDK, stdio and HTTP | protocol version and capabilities; tool schemas and annotations; tool metadata safe to show a model; exact conversions from an independent oracle; business errors as `isError` results; progress, cancellation, `list_changed` |
+| `mcp/resources-and-prompts` | MCP SDK                 | resources, templates, completion; bad URIs (`..`, `file:///etc/passwd`) refused; prompts; the admin tool trusted over stdio, scope-checked over HTTP                                                                            |
+| `mcp-http/protocol`         | raw HTTP                | sessions; 401 with RFC 9728 metadata; `Origin` → 403; JSON-RPC errors; the protocol-version header; `Accept` → 406; a read-only token                                                                                           |
+| `inspector/inspector-cli`   | MCP Inspector 2.x       | an independent client against our server: a compatibility check                                                                                                                                                                 |
+| `llm/plumbing` (20)         | a fake Messages API     | the exact request (pinned model, strict tool, JSON schema); the tool loop; tool errors fed back; hallucinated amounts flagged; broken output → 502; 529 retried, then 503; timeout → 504; the key never echoed                  |
+| `evals` (13 × 3)            | the real Claude API     | exact conversions in English and Russian; asking for a missing currency; no invented rates; refusing off-topic requests; **prompt injection never leaks the system prompt** (a canary)                                          |
 
-**Findings.** The SDK 1.32 client can drop the last progress notification when it arrives together with the result
-(the server is right; the test asserts on the wire). The Inspector CLI sends `amount=100` as a number, which the
-schema rightly refuses. **Do the tests catch bugs?** 14 bugs planted: 13 caught, the 14th is an equivalent mutant
-(the SDK turns a thrown error into the same tool result). The first run missed "cancellation ignored", which led to
-an operational resource that makes abandoned work visible. Details: [`docs/mcp.md`](docs/mcp.md) · visual guide:
-[`docs/mcp.html`](https://nailkarimov.github.io/ai-api-testing/mcp.html).
+## Findings
 
-## LLM endpoint (20 plumbing tests + 13 evals)
-
-`services/fx-assistant`: `POST /v1/answer` takes a customer's question in any language; **Claude Haiku 5.5** answers
-with structured JSON output, calling the `convert` tool for every number. The service then checks the model's work:
-the answer must match the schema, and every amount must come from a tool call (**groundedness**), or it says so.
-
-| Layer                       | What it proves                                                                                                                                                                                                                                                                                                                                                                                    | When it runs                                                          |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| `llm/plumbing` (20)         | against a **fake Messages API** (the real SDK, a local stub): the exact request (pinned model, strict tool, JSON schema, system prompt), the tool loop with ids, tool errors fed back to the model, hallucinated amounts flagged, broken / truncated output → 502, refusal, endless tool calls stopped, 529 retried then 503 + Retry-After, timeout → 504, the key never echoed, input boundaries | every push, free                                                      |
-| `evals` (13 cases × 3 runs) | against the **real model**: exact conversions in English and Russian, two at once, casual wording; asking for a missing currency; no invented rates (Bitcoin, 1999); refusing off-topic requests; **prompt injection** must never leak the system prompt (a canary string), 3 runs out of 3                                                                                                       | `evals.yml`: by hand and weekly, needs the `ANTHROPIC_API_KEY` secret |
-
-A model answers differently each time, so each eval runs 3 times and needs a pass count (3/3 for safety, ≥ 2/3 for
-some quality cases). `scripts/eval-summary.mjs` reports pass rates per category, latency p50/p95 and tokens with an
-estimated cost, and fails the run over budget ($0.25 or p95 > 20 s). First real run: 11/13, the two "leaks" were
-correct refusals misread by a keyword check; with an exact, tested oracle: **13/13**. 10 bugs planted in the plumbing: all caught.
-Details: [`docs/llm.md`](docs/llm.md) · visual guide: [`docs/llm.html`](https://nailkarimov.github.io/ai-api-testing/llm.html).
+- **MCP SDK 1.32 can drop the last progress notification** when it arrives together with the result. The server
+  is right, and the test asserts on the recorded wire, not on the SDK's callbacks.
+- **The Inspector CLI sends `amount=100` as a number,** which the schema rightly refuses.
+- **The first eval run scored 11/13.** The two "leaks" were correct refusals misread by a keyword check. With an
+  exact, tested oracle the score is **13/13**.
+- **"Cancellation ignored" survived the first mutation round.** That led to an operational resource that makes
+  abandoned work visible.
 
 ## Running it
 
+Requirements: Node.js 22+, Java 17+ for a local Allure report. The evals also need `ANTHROPIC_API_KEY` in `.env`.
+
 ```bash
 npm ci
-npm test                 # everything
+npm test                 # everything except the evals
 npm run test:mcp         # MCP: stdio, HTTP, raw protocol, Inspector
 npm run test:llm         # LLM endpoint against the fake Messages API
-npm run evals            # real Claude: needs ANTHROPIC_API_KEY in .env (see .env.example)
+npm run evals            # real Claude; budget $0.25, p95 20 s
 npm run mcp:http         # by hand: http://127.0.0.1:3333/mcp, tokens dev-read and dev-admin
 npx mcp-inspector --cli http://127.0.0.1:3333/mcp --header "Authorization: Bearer dev-read" --method tools/list
 ```
 
+## Project structure
+
+```text
+services/fx-mcp/        the MCP server: tools, resources, prompts, stdio and HTTP transports
+services/fx-assistant/  the LLM endpoint: tool loop, structured output, groundedness check
+src/mcp/, src/llm/      clients, wire recorder, the fake Messages API, oracles
+src/fixtures.ts         server per worker, both transports
+tests/mcp/, tests/mcp-http/, tests/inspector/   MCP specs
+tests/llm/              plumbing specs
+tests/evals/            evals against the real model
+tests/unit/             the leak check used by the evals
+scripts/                Allure preparation, eval summary with cost and latency
+docs/                   test plan, test report, guides
+```
+
+## CI
+
+- `tests.yml` runs on push, pull request, nightly at 03:00 UTC and on demand: lint, format, typecheck, all tests
+  except the evals, and the Allure report with history on GitHub Pages.
+- `evals.yml` runs by hand and every Monday at 04:00 UTC. It needs the `ANTHROPIC_API_KEY` secret and fails over
+  budget ($0.25, or p95 > 20 s).
+
+## Documentation
+
+| Document                                                                                       | What it is                                                                                                 |
+| ---------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [`docs/test-plan.md`](docs/test-plan.md)                                                       | test plan (ISO/IEC/IEEE 29119-3)                                                                           |
+| [`docs/test-report.md`](docs/test-report.md)                                                   | test summary report: latest results, findings, recommendations                                             |
+| [`docs/mcp.md`](docs/mcp.md) · [visual](https://nailkarimov.github.io/ai-api-testing/mcp.html) | MCP: tools, resources, prompts, `isError` vs JSON-RPC errors, tool poisoning, HTTP security, the Inspector |
+| [`docs/llm.md`](docs/llm.md) · [visual](https://nailkarimov.github.io/ai-api-testing/llm.html) | the LLM endpoint: plumbing on a fake API, evals, groundedness, the prompt-injection canary                 |
+
 ## Part of a portfolio
 
-REST and GraphQL: [api-test-automation](https://github.com/NailKarimov/api-test-automation) · contracts:
-[contract-testing-lab](https://github.com/NailKarimov/contract-testing-lab) · microservices:
-[microservices-testing](https://github.com/NailKarimov/microservices-testing) · database and OAuth 2.0:
-[ledger-api-testing](https://github.com/NailKarimov/ledger-api-testing) · gRPC, WebSocket, SSE:
-[api-protocols-testing](https://github.com/NailKarimov/api-protocols-testing) · overview:
-[github.com/NailKarimov](https://github.com/NailKarimov).
-
-**Stack:** TypeScript · Model Context Protocol (`@modelcontextprotocol/sdk`, MCP Inspector) · JSON-RPC 2.0 · Claude API
-(`@anthropic-ai/sdk`, structured outputs, tool use) · zod ·
-Playwright Test · Allure · GitHub Actions.
+One of 13 test automation projects by [Nail Karimov](https://github.com/NailKarimov):
+[all projects](https://github.com/NailKarimov) ·
+[testing map](https://nailkarimov.github.io/api-test-automation/testing-map.html) ·
+[toolbox](https://nailkarimov.github.io/api-test-automation/toolbox.html).
