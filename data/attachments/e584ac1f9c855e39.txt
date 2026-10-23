@@ -1,0 +1,5 @@
+    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
+   18 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
+   18 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
+   20 ms → {"method":"tools/call","params":{"name":"convert","arguments":{"amount":"0","from":"EUR","to":"USD"}},"jsonrpc":"2.0","id":1}
+   23 ms ← {"jsonrpc":"2.0","id":1,"result":{"content":[{"type":"text","text":"0 EUR = 0.00 USD (rate 1.085000)"}],"structuredContent":{"amount":"0","from":"EUR","to":"USD","rate":"1.085000","result":"0.00"}}}

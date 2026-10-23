@@ -1,5 +1,0 @@
-    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
-  258 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
-  259 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
-  260 ms → {"method":"tools/call","params":{"name":"convert","arguments":{"amount":"250.75","from":"GBP","to":"CHF"}},"jsonrpc":"2.0","id":1}
-  266 ms ← {"jsonrpc":"2.0","id":1,"result":{"content":[{"type":"text","text":"250.75 GBP = 280.70 CHF (rate 1.119438)"}],"structuredContent":{"amount":"250.75","from":"GBP","to":"CHF","rate":"1.119438","result":"280.70"}}}
