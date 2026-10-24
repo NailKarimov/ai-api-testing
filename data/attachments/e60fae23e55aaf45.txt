@@ -1,5 +1,0 @@
-    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
-  178 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
-  178 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
-  179 ms → {"method":"prompts/list","jsonrpc":"2.0","id":1}
-  183 ms ← {"jsonrpc":"2.0","id":1,"result":{"prompts":[{"name":"explain_conversion","title":"Explain a conversion","description":"Asks the model to explain a conversion to a customer in plain words.","arguments":[{"name":"amount","required":true},{"name":"from","required":true},{"name":"to","required":true}]}]}}

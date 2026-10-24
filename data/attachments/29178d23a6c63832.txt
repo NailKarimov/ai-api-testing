@@ -1,5 +1,0 @@
-    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
-  229 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
-  229 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
-  229 ms → {"method":"tools/call","params":{"name":"convert","arguments":{"amount":100,"from":"EUR","to":"USD"}},"jsonrpc":"2.0","id":1}
-  233 ms ← {"jsonrpc":"2.0","id":1,"result":{"content":[{"type":"text","text":"MCP error -32602: Input validation error: Invalid arguments for tool convert: Invalid input: expected string, received number at amount"}],"isError":true}}
