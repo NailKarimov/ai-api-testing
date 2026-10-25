@@ -1,0 +1,2 @@
+POST /v1/answer "5 EUR to XYZ"
+→ 200 {"answer":"XYZ is not supported.","conversions":[],"refused":false,"needs_clarification":false,"grounded":true,"tool_calls":[{"input":{"amount":"5","from":"EUR","to":"XYZ"},"output":"Unknown currency: XYZ. Known: CHF, EUR, GBP, JPY, SEK, USD.","isError":true}],"usage":{"input_tokens":240,"output_tokens":80},"model":"claude-haiku-5-5","turns":2,"latency_ms":5}
