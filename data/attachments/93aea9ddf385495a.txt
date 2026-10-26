@@ -1,5 +1,0 @@
-    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
-  187 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
-  188 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
-  188 ms → {"method":"tools/call","params":{"name":"convert","arguments":{"amount":"1000000","from":"SEK","to":"JPY"}},"jsonrpc":"2.0","id":1}
-  192 ms ← {"jsonrpc":"2.0","id":1,"result":{"content":[{"type":"text","text":"1000000 SEK = 14365149 JPY (rate 14.365149)"}],"structuredContent":{"amount":"1000000","from":"SEK","to":"JPY","rate":"14.365149","result":"14365149"}}}
