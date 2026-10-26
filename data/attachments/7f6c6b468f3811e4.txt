@@ -1,2 +1,0 @@
-POST /v1/answer "100 EUR in JPY?"
-→ 502 {"error":"bad_model_output","message":"the model answer did not match the schema"}

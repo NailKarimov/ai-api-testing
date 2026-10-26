@@ -1,2 +1,0 @@
-POST /v1/answer "{raw}{oops"
-→ 400 {"error":"bad_json","message":"the body is not JSON"}

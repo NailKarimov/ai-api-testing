@@ -1,5 +1,0 @@
-    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
-    6 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
-    7 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
-   10 ms → {"method":"resources/read","params":{"uri":"fx://currencies"},"jsonrpc":"2.0","id":1}
-   15 ms ← {"jsonrpc":"2.0","id":1,"result":{"contents":[{"uri":"fx://currencies","mimeType":"application/json","text":"[{\"code\":\"CHF\",\"minorUnits\":2},{\"code\":\"EUR\",\"minorUnits\":2},{\"code\":\"GBP\",\"minorUnits\":2},{\"code\":\"JPY\",\"minorUnits\":0},{\"code\":\"SEK\",\"minorUnits\":2},{\"code\":\"USD\",\"minorUnits\":2}]"}]}}
