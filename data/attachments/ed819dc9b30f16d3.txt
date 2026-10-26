@@ -1,7 +1,0 @@
-    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
-  339 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
-  339 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
-  340 ms → {"method":"resources/read","params":{"uri":"fx://rates/USD"},"jsonrpc":"2.0","id":1}
-  343 ms ← {"jsonrpc":"2.0","id":1,"result":{"contents":[{"uri":"fx://rates/USD","mimeType":"application/json","text":"{\"base\":\"USD\",\"rates\":{\"CHF\":\"0.881106\",\"EUR\":\"0.921659\",\"GBP\":\"0.787097\",\"JPY\":\"151.198157\",\"SEK\":\"10.525346\"}}"}]}}
-  343 ms → {"method":"tools/call","params":{"name":"convert","arguments":{"amount":"1","from":"USD","to":"JPY"}},"jsonrpc":"2.0","id":2}
-  348 ms ← {"jsonrpc":"2.0","id":2,"result":{"content":[{"type":"text","text":"1 USD = 151 JPY (rate 151.198157)"}],"structuredContent":{"amount":"1","from":"USD","to":"JPY","rate":"151.198157","result":"151"}}}
