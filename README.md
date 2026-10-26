@@ -3,6 +3,7 @@
 [![Tests](https://github.com/NailKarimov/ai-api-testing/actions/workflows/tests.yml/badge.svg)](https://github.com/NailKarimov/ai-api-testing/actions/workflows/tests.yml)
 [![Evals](https://github.com/NailKarimov/ai-api-testing/actions/workflows/evals.yml/badge.svg)](https://github.com/NailKarimov/ai-api-testing/actions/workflows/evals.yml)
 [![Allure report](https://img.shields.io/badge/report-Allure-orange)](https://nailkarimov.github.io/ai-api-testing/)
+[![Release](https://img.shields.io/github/v/release/NailKarimov/ai-api-testing)](https://github.com/NailKarimov/ai-api-testing/releases)
 
 ### ▶ Open online
 
@@ -82,6 +83,8 @@ docs/                   test plan, test report, guides
   except the evals, and the Allure report with history on GitHub Pages.
 - `evals.yml` runs by hand and every Monday at 04:00 UTC. It needs the `ANTHROPIC_API_KEY` secret and fails over
   budget ($0.25, or p95 > 20 s).
+
+Releases: committing `.github/releases/<tag>.md` runs the Release workflow, which creates the tag and the GitHub release with that file as its notes.
 
 ## Documentation
 
