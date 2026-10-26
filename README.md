@@ -4,6 +4,16 @@
 [![Evals](https://github.com/NailKarimov/ai-api-testing/actions/workflows/evals.yml/badge.svg)](https://github.com/NailKarimov/ai-api-testing/actions/workflows/evals.yml)
 [![Allure report](https://img.shields.io/badge/report-Allure-orange)](https://nailkarimov.github.io/ai-api-testing/)
 
+### ▶ Open online
+
+| Page                                                                    | What it is        |
+| ----------------------------------------------------------------------- | ----------------- |
+| **[Allure test report](https://nailkarimov.github.io/ai-api-testing/)** | latest CI run     |
+| [MCP server](https://nailkarimov.github.io/ai-api-testing/mcp.html)     | interactive guide |
+| [LLM endpoint](https://nailkarimov.github.io/ai-api-testing/llm.html)   | interactive guide |
+
+Click these links: opening an `.html` file in the file list shows its source code, GitHub does not run it.
+
 Testing the APIs that AI assistants use: an **MCP server** of our own and an **LLM endpoint** built on Claude. The
 tests check what the model sees, what it is allowed to do, and whether its answers can be trusted.
 
