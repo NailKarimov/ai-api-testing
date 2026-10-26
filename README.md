@@ -4,6 +4,7 @@
 [![Evals](https://github.com/NailKarimov/ai-api-testing/actions/workflows/evals.yml/badge.svg)](https://github.com/NailKarimov/ai-api-testing/actions/workflows/evals.yml)
 [![Allure report](https://img.shields.io/badge/report-Allure-orange)](https://nailkarimov.github.io/ai-api-testing/)
 [![Release](https://img.shields.io/github/v/release/NailKarimov/ai-api-testing)](https://github.com/NailKarimov/ai-api-testing/releases)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/NailKarimov/ai-api-testing?quickstart=1)
 
 ### ▶ Open online
 
@@ -49,6 +50,8 @@ tests check what the model sees, what it is allowed to do, and whether its answe
   abandoned work visible.
 
 ## Running it
+
+No local setup: the **Open in GitHub Codespaces** badge starts a browser VS Code with this repository, its tools and Docker; the container runs `npm ci` on creation, then `npm test` works in the terminal.
 
 Requirements: Node.js 22+, Java 17+ for a local Allure report. The evals also need `ANTHROPIC_API_KEY` in `.env`.
 
