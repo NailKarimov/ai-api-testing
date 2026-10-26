@@ -1,0 +1,2 @@
+POST /v1/answer "Hi"
+→ 504 {"error":"upstream_timeout","message":"the model did not answer in time"}

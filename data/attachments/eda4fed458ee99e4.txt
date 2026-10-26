@@ -1,0 +1,15 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "100 EUR = 16405 JPY (rate 164.050000)"
+    }
+  ],
+  "structuredContent": {
+    "amount": "100",
+    "from": "EUR",
+    "to": "JPY",
+    "rate": "164.050000",
+    "result": "16405"
+  }
+}

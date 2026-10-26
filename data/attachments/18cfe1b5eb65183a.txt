@@ -1,0 +1,5 @@
+    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
+  329 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
+  329 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
+  329 ms → {"method":"tools/call","params":{"name":"convert","arguments":{"amount":"1.5","from":"JPY","to":"EUR"}},"jsonrpc":"2.0","id":1}
+  334 ms ← {"jsonrpc":"2.0","id":1,"result":{"content":[{"type":"text","text":"JPY has 0 decimal places; 1.5 has 1."}],"isError":true}}
