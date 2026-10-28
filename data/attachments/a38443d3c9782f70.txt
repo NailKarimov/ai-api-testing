@@ -1,0 +1,8 @@
+    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
+  232 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
+  232 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
+  232 ms → {"method":"tools/call","params":{"name":"enable_currency","arguments":{"code":"NOK"}},"jsonrpc":"2.0","id":1}
+  236 ms ← {"jsonrpc":"2.0","method":"notifications/resources/list_changed"}
+  237 ms ← {"jsonrpc":"2.0","id":1,"result":{"content":[{"type":"text","text":"NOK enabled"}]}}
+  238 ms → {"method":"resources/list","jsonrpc":"2.0","id":2}
+  239 ms ← {"jsonrpc":"2.0","id":2,"result":{"resources":[{"uri":"fx://currencies","name":"currencies","title":"Currencies","description":"Known currencies and their minor units","mimeType":"application/json"},{"uri":"fx://server/jobs","name":"jobs","title":"Running jobs","description":"Reports running, finished and cancelled","mimeType":"application/json"},{"title":"Rates against a base","description":"Every rate against one base currency","mimeType":"application/json","uri":"fx://rates/CHF","name":"rates-CHF"},{"title":"Rates against a base","description":"Every rate against one base currency","mimeTyp

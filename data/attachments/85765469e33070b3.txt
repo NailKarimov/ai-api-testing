@@ -1,0 +1,5 @@
+    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
+  312 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
+  313 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
+  313 ms → {"method":"prompts/get","params":{"name":"explain_conversion","arguments":{"amount":"100","from":"EUR","to":"JPY"}},"jsonrpc":"2.0","id":1}
+  317 ms ← {"jsonrpc":"2.0","id":1,"result":{"messages":[{"role":"user","content":{"type":"text","text":"Explain to a bank customer, in two sentences, what 100 EUR is worth in JPY. Use the convert tool for the number; do not guess it."}}]}}
