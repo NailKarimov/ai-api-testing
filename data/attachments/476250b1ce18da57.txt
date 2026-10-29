@@ -1,0 +1,5 @@
+    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
+  174 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
+  174 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
+  174 ms → {"method":"tools/call","params":{"name":"convert","arguments":{"amount":"100","from":"EUR","to":"USD"}},"jsonrpc":"2.0","id":1}
+  178 ms ← {"jsonrpc":"2.0","id":1,"result":{"content":[{"type":"text","text":"100 EUR = 108.50 USD (rate 1.085000)"}],"structuredContent":{"amount":"100","from":"EUR","to":"USD","rate":"1.085000","result":"108.50"}}}

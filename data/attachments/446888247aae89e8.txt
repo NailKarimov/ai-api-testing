@@ -1,0 +1,10 @@
+    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
+    2 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
+    2 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
+    4 ms → {"method":"tools/call","params":{"name":"slow_report","arguments":{"steps":5,"stepMs":20},"_meta":{"progressToken":1}},"jsonrpc":"2.0","id":1}
+   28 ms ← {"jsonrpc":"2.0","method":"notifications/progress","params":{"progressToken":1,"progress":1,"total":5,"message":"step 1 of 5"}}
+   49 ms ← {"jsonrpc":"2.0","method":"notifications/progress","params":{"progressToken":1,"progress":2,"total":5,"message":"step 2 of 5"}}
+   70 ms ← {"jsonrpc":"2.0","method":"notifications/progress","params":{"progressToken":1,"progress":3,"total":5,"message":"step 3 of 5"}}
+   89 ms ← {"jsonrpc":"2.0","method":"notifications/progress","params":{"progressToken":1,"progress":4,"total":5,"message":"step 4 of 5"}}
+  110 ms ← {"jsonrpc":"2.0","method":"notifications/progress","params":{"progressToken":1,"progress":5,"total":5,"message":"step 5 of 5"}}
+  110 ms ← {"jsonrpc":"2.0","id":1,"result":{"content":[{"type":"text","text":"report ready after 5 steps"}]}}

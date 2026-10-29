@@ -1,2 +1,0 @@
-POST /v1/answer "Something the model refuses"
-→ 200 {"answer":"I cannot help with that.","conversions":[],"refused":true,"needs_clarification":false,"grounded":true,"tool_calls":[],"usage":{"input_tokens":120,"output_tokens":40},"model":"claude-haiku-5-5","turns":1,"latency_ms":5}
