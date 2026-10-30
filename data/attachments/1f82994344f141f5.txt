@@ -1,5 +1,0 @@
-    0 ms → {"method":"initialize","params":{"protocolVersion":"2025-11-25","capabilities":{},"clientInfo":{"name":"qa-tests","version":"1.0.0"}},"jsonrpc":"2.0","id":0}
-  136 ms ← {"jsonrpc":"2.0","id":0,"result":{"protocolVersion":"2025-11-25","capabilities":{"logging":{},"tools":{"listChanged":true},"resources":{"listChanged":true},"completions":{},"prompts":{"listChanged":true}},"serverInfo":{"name":"fx-mcp","version":"1.0.0"},"instructions":"Converts amounts between currencies at a fixed reference table. Amounts are decimal strings."}}
-  136 ms → {"method":"notifications/initialized","jsonrpc":"2.0"}
-  136 ms → {"method":"resources/templates/list","jsonrpc":"2.0","id":1}
-  139 ms ← {"jsonrpc":"2.0","id":1,"result":{"resourceTemplates":[{"name":"rates","uriTemplate":"fx://rates/{base}","title":"Rates against a base","description":"Every rate against one base currency","mimeType":"application/json"}]}}
