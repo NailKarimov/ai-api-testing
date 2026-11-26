@@ -1,0 +1,2 @@
+POST /v1/answer "How much is 100 EUR in yen?"
+→ 200 {"answer":"100 EUR is 16405 JPY.","conversions":[{"amount":"100","from":"EUR","to":"JPY","result":"16405"}],"refused":false,"needs_clarification":false,"grounded":true,"tool_calls":[{"input":{"amount":"100","from":"EUR","to":"JPY"},"output":"100 EUR = 16405 JPY","isError":false}],"usage":{"input_tokens":240,"output_tokens":80},"model":"claude-haiku-5-5","turns":2,"latency_ms":17}
